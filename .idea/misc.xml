@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/drawable/ic_arrow_down.xml" value="0.5635416666666667" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/activity_main.xml" value="0.5473958333333333" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/fragment_base.xml" value="0.33" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_artist.xml" value="0.5473958333333333" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_category_title_name.xml" value="0.3070652173913043" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_genre.xml" value="0.5473958333333333" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_artist.xml" value="0.5473958333333333" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_artist_name.xml" value="0.5473958333333333" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_category_name.xml" value="0.3070652173913043" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
