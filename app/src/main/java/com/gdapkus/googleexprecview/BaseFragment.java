@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.gdapkus.googleexprecview.adapters.GenreAdapter;
 import com.gdapkus.googleexprecview.adapters.MultiCheckGenreAdapter;
@@ -101,7 +102,7 @@ public class BaseFragment extends Fragment {
 
     public void initViews(View view){
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        recyclerView2 = (RecyclerView) view.findViewById(R.id.recycler_view_2);
+        //recyclerView2 = (RecyclerView) view.findViewById(R.id.recycler_view_2);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager2 = new LinearLayoutManager(getActivity());
 
@@ -122,12 +123,23 @@ public class BaseFragment extends Fragment {
         if(checked) {
             List<Subcategory> subcategories = createSubcategoryList(childIndex);
             MultiCheckSubcategoryAdapter adapter = new MultiCheckSubcategoryAdapter(subcategories);
-            recyclerView2.setAlpha(1);
+            rearangeLinearLayout();
+            /*recyclerView2.setAlpha(1);
             recyclerView2.setLayoutManager(linearLayoutManager2);
-            recyclerView2.setAdapter(adapter);/**/
+            recyclerView2.setAdapter(adapter);*/
         }else{
-            recyclerView2.setAlpha(0);
+            //recyclerView2.setAlpha(0);
         }
+    }
+
+    public void rearangeLinearLayout(){/*
+        LinearLayout.LayoutParams llLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                Integer.parseInt("325dp"));*/
+        linearLayoutManager.setMeasuredDimension(LinearLayout.LayoutParams.MATCH_PARENT, 360);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        //((LinearLayoutManager)recyclerView.getLayoutManager()).setStackFromEnd(true);
+
     }
 
 
