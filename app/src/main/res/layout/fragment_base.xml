@@ -6,17 +6,19 @@
     tools:context=".BaseFragment">
 
     <RelativeLayout
+        android:id="@+id/expand_category_ov"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/expand_category_rl"
             android:layout_width="match_parent"
-           android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                >
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -30,6 +32,7 @@
                 </RelativeLayout>
             </ScrollView>
         </RelativeLayout>
+
 
         <!--<RelativeLayout
             android:id="@+id/expand_category_rl_2"

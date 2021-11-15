@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Relative layout dynamic UI ids-->
+    <item name="id_sub_relative_layout_1" type="id" />
+    <item name="id_sub_relative_layout_2" type="id" />
+    <item name="id_sub_relative_layout_3" type="id" />
+    <item name="id_sub_relative_layout_4" type="id" />
+    <item name="id_sub_relative_layout_5" type="id" />
+    <item name="id_sub_relative_layout_6" type="id" />
+    <item name="id_sub_relative_layout_7" type="id" />
+    <item name="id_sub_relative_layout_8" type="id" />
+    <item name="id_sub_relative_layout_9" type="id" />
+    <item name="id_sub_relative_layout_10" type="id" />
+    <item name="id_sub_relative_layout_11" type="id" />
+    <item name="id_sub_relative_layout_12" type="id" />
+
+    <!--Recycler View dynamic UI ids-->
+    <item name="id_recycler_view_1" type="id" />
+    <item name="id_recycler_view_2" type="id" />
+    <item name="id_recycler_view_3" type="id" />
+    <item name="id_recycler_view_4" type="id" />
+    <item name="id_recycler_view_5" type="id" />
+    <item name="id_recycler_view_6" type="id" />
+    <item name="id_recycler_view_7" type="id" />
+    <item name="id_recycler_view_8" type="id" />
+    <item name="id_recycler_view_9" type="id" />
+    <item name="id_recycler_view_10" type="id" />
+    <item name="id_recycler_view_11" type="id" />
+    <item name="id_recycler_view_12" type="id" />
+
+</resources>
