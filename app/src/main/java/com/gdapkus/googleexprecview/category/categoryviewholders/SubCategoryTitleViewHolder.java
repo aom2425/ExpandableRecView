@@ -9,15 +9,15 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 public class SubCategoryTitleViewHolder extends GroupViewHolder {
 
-    private TextView categoryTitle;
+    private TextView subcategoryTitle;
 
     public SubCategoryTitleViewHolder(View itemView) {
         super(itemView);
-        categoryTitle = itemView.findViewById(R.id.list_item_category_title_name);
+        subcategoryTitle = itemView.findViewById(R.id.list_item_subcategory_title_name);
     }
 
-    public void setCategoryTitle(ExpandableGroup group ){
-        categoryTitle.setText(group.getTitle());
+    public void setSubcategoryTitle(ExpandableGroup group ){
+        subcategoryTitle.setText(group.getTitle());
     }
 
 

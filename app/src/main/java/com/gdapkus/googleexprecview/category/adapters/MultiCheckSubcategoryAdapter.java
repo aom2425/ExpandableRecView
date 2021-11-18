@@ -21,28 +21,14 @@ import java.util.List;
 
 public class MultiCheckSubcategoryAdapter extends CheckableChildRecyclerViewAdapter<SubCategoryTitleViewHolder, SubCategoryViewHolder> {
 
-    private int maxCount = 12;
-
     public MultiCheckSubcategoryAdapter(List<? extends CheckedExpandableGroup> groups) {
         super(groups);
     }
 
     @Override
-    public SubCategoryTitleViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_category_title_name, parent, false);
-        return new SubCategoryTitleViewHolder(view);
-    }
-
-    @Override
-    public void onBindGroupViewHolder(SubCategoryTitleViewHolder holder, int flatPosition, ExpandableGroup group) {
-        holder.setCategoryTitle(group);
-    }
-
-    @Override
     public SubCategoryViewHolder onCreateCheckChildViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_multicheck_category_name, parent, false);
+                .inflate(R.layout.list_item_multicheck_subcategory_name, parent, false);
         return new SubCategoryViewHolder(view);
     }
 
@@ -52,9 +38,15 @@ public class MultiCheckSubcategoryAdapter extends CheckableChildRecyclerViewAdap
         holder.setSubcategoryName(subcategory.getName());
     }
 
-   /* @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if()
-        //super.onBindViewHolder(holder, position);
-    }*/
+    @Override
+    public SubCategoryTitleViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_subcategory_title_name, parent, false);
+        return new SubCategoryTitleViewHolder(view);
+    }
+
+    @Override
+    public void onBindGroupViewHolder(SubCategoryTitleViewHolder holder, int flatPosition, ExpandableGroup group) {
+        holder.setSubcategoryTitle(group);
+    }
 }

@@ -7,11 +7,13 @@
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/activity_main.xml" value="0.5473958333333333" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/fragment_base.xml" value="0.33" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_artist.xml" value="0.5473958333333333" />
-        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_category_title_name.xml" value="0.3070652173913043" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_category_title_name.xml" value="0.27811550151975684" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_genre.xml" value="0.5473958333333333" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_artist.xml" value="0.5473958333333333" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_artist_name.xml" value="0.5473958333333333" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_category_name.xml" value="0.3070652173913043" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_multicheck_subcategory_name.xml" value="0.1950354609929078" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/list_item_subcategory_title_name.xml" value="0.25" />
       </map>
     </option>
   </component>

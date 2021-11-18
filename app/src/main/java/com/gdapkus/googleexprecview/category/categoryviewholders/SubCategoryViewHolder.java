@@ -13,7 +13,7 @@ public class SubCategoryViewHolder extends CheckableChildViewHolder {
 
     public SubCategoryViewHolder(View itemView) {
         super(itemView);
-        childCheckedTextView = (CheckedTextView) itemView.findViewById(R.id.list_item_multicheck_category_name);
+        childCheckedTextView = (CheckedTextView) itemView.findViewById(R.id.list_item_multicheck_subcategory_name);
     }
 
     @Override

@@ -4,6 +4,7 @@ import static com.gdapkus.googleexprecview.DataFactory.makeGenres;
 import static com.gdapkus.googleexprecview.category.catclasses.CategoryDataFactory.createCategoryList;
 import static com.gdapkus.googleexprecview.category.catclasses.CategoryDataFactory.createSubcategoryList;
 import static com.gdapkus.googleexprecview.category.catclasses.JSONData.getJSONCategories;
+import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.getSelectedSubcategories;
 import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.setSubCategoriesHM;
 
 
@@ -43,6 +44,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -67,12 +69,7 @@ public class BaseFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager2;
     MultiCheckCategoryAdapter multi_adapter;
     private List<Category> categories = createCategoryList();
-    private int click_count =0;
-
-
-    final int TOP_ID = 3;
-    final int BOTTOM_ID = 4;
-
+    private View view;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -100,14 +97,10 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_base, container, false);
+        view = inflater.inflate(R.layout.fragment_base, container, false);
         List<Genre> genres = makeGenres();
-        for(int i = 0; i < categories.size(); i++){
-            Log.d("DEBUG", "Log cat: " + categories.get(0));
-        }
         initViews(view);
 
-        Log.d("DEBUG", "Category list: \n" + getJSONCategories());
         GenreAdapter adapter = new GenreAdapter(genres);
         multi_adapter = new MultiCheckCategoryAdapter(categories);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -115,14 +108,13 @@ public class BaseFragment extends Fragment {
 
         multi_adapter.setChildClickListener(adapter_lister);
 
-        return view;//inflater.inflate(R.layout.fragment_base, container, false);
+        return view;
     }
 
     public void initViews(View view){
         rl = (RelativeLayout) view.findViewById(R.id.expand_category_ov);
         rl_cat = (RelativeLayout) view.findViewById(R.id.expand_category_rl);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        //recyclerView2 = (RecyclerView) view.findViewById(R.id.recycler_view_2);
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
     }
@@ -130,32 +122,24 @@ public class BaseFragment extends Fragment {
     OnCheckChildClickListener adapter_lister = new OnCheckChildClickListener() {
         @Override
         public void onCheckChildCLick(View v, boolean checked, CheckedExpandableGroup group, int childIndex) {
-            Log.d("CHECKBOX", "button clicked: bool= " + checked + "\n" + categories.get(0).getCategoryList().get(childIndex).getName());
-            //makeSubCategoryList("test");
-
-            createSubcategoryRecView(checked, childIndex, v);
+            createSubcategoryRecView(checked, childIndex);
         }
     };
 
-    private void createSubcategoryRecView(boolean checked, int childIndex, View view){
+    private void createSubcategoryRecView(boolean checked, int childIndex){
 
         List<Subcategory> subcategories = createSubcategoryList(childIndex);
         String cat_title = subcategories.get(0).getTitle();
 
         if(checked) {
-            click_count++;
-            MultiCheckSubcategoryAdapter adapter = new MultiCheckSubcategoryAdapter(subcategories);
-            //Log.d("subcategories: ", subcategories.get(0).getTitle());
-
+            MultiCheckSubcategoryAdapter multi_subcategory_adapter = new MultiCheckSubcategoryAdapter(subcategories);
             setNewLayoutSize();
-            createDynamicUI(adapter, cat_title, childIndex);
+            createDynamicUI(multi_subcategory_adapter, cat_title, childIndex);
 
         }else{
-            click_count--;
-
-            //TODO: Create remove for unclicking of buttons
-            // Currently breaks when pressed
-            View v = view.findViewById(R.id.id_sub_relative_layout_1);
+            // List of all selected subcategories
+            HashMap<String, Integer> sel_sub_list = getSelectedSubcategories();
+            View v = view.findViewById(sel_sub_list.get(cat_title));
             ViewGroup parent = (ViewGroup) v.getParent();
             parent.removeView(v);
         }
@@ -182,17 +166,20 @@ public class BaseFragment extends Fragment {
     private void createDynamicUI(MultiCheckSubcategoryAdapter adapter, String title, int index_val){
 
         // Creation of subcategory layout after the category has been selected
-
         // Create relative layout to be bellow category section
         RelativeLayout rv = new RelativeLayout(getContext());
         ViewGroup.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT
         );
         ((RelativeLayout.LayoutParams) params).addRule(RelativeLayout.BELOW, rl_cat.getId());
 
-        int id_rl = getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index_val+1), "id", getContext().getPackageName());
-        int id_rv = getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index_val+1), "id", getContext().getPackageName());
+        int id_rl = getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index_val+1),
+                                                "id",
+                                                        getContext().getPackageName());
+        int id_rv = getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index_val+1),
+                                                "id",
+                                                        getContext().getPackageName());
 
         rv.setId(id_rl);
         rv.setLayoutParams(params);
@@ -217,8 +204,8 @@ public class BaseFragment extends Fragment {
         RecyclerView item_exp_list = new RecyclerView(getContext());
         item_exp_list.setId(id_rv);
         //Create the recycler view Layout manager
-        linearLayoutManager2 = new LinearLayoutManager(getActivity());
-
+        linearLayoutManager2 = new LinearLayoutManager(getContext());
+        //LinearLayoutManager llm = new LinearLayoutManager(getContext());
         item_exp_list.setLayoutManager(linearLayoutManager2);
         item_exp_list.setAdapter(adapter);
 
@@ -228,11 +215,22 @@ public class BaseFragment extends Fragment {
         rv.addView(sv);
         rl.addView(rv);
         setSubCategoriesHM(title, id_rl);
+        getLastElement();
     }
 
+    private void getLastElement(){
+        HashMap<String, Integer> temp_map = new HashMap<String, Integer>();
+        temp_map = getSelectedSubcategories();
+        for(String key : temp_map.keySet()){
+            Log.d("DEBUG:", "keys " + key + "\n" + temp_map.get(key));
+        }
+    }
 
-
-
+    /*
+    * add the created dynamic UIs to hashmap
+    * function to to see the last added element
+    * by the last element oh hashmap take the id of rel lay and add params rule
+    * */
 }
 
 
