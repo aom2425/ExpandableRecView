@@ -53,7 +53,6 @@ public class BaseFragment extends Fragment {
 
     //TODO: When the reorganization of categories happens the UI is slighlty misplaced.
     //TODO: Test all functionality
-    //TODO: dynamically
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,6 +65,7 @@ public class BaseFragment extends Fragment {
     private RelativeLayout rl;
     private RelativeLayout rl_cat;
     private RecyclerView recyclerView;
+    private ScrollView scrollView;
     private LinearLayoutManager linearLayoutManager;
     private LinearLayoutManager linearLayoutManager2;
     MultiCheckCategoryAdapter multi_adapter;
@@ -113,6 +113,7 @@ public class BaseFragment extends Fragment {
     public void initViews(View view){
         rl = (RelativeLayout) view.findViewById(R.id.expand_category_ov);
         rl_cat = (RelativeLayout) view.findViewById(R.id.expand_category_rl);
+        scrollView =  (ScrollView) view.findViewById(R.id.scroll_view_cat_main);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
@@ -132,7 +133,7 @@ public class BaseFragment extends Fragment {
 
         if(checked) {
             MultiCheckSubcategoryAdapter multi_subcategory_adapter = new MultiCheckSubcategoryAdapter(subcategories);
-            setNewLayoutSize();
+            //setNewLayoutSize();
             addNode(multi_subcategory_adapter, cat_title, childIndex);
 
         }else{
