@@ -40,14 +40,14 @@ public class CategoryDataFactory {
         for(String name : in_categories){
             cat_list.add(new CategoryList(name));
         }
-        Log.d("DEBUG", "CATEGORY product: " + cat_list.get(0).getName());
+        //Log.d("DEBUG", "CATEGORY product: " + cat_list.get(0).getName());
         return cat_list;// Arrays.asList(new CategoryList("Car fixing"));
     }
 
     public static Subcategory makeSubcategories(int child_index){
         List<CategoryList> temp_cat_list = makeCategoryList();
         String subcat_name = temp_cat_list.get(child_index).getName();
-        Log.d("CATDATAFACTORY: ", "cat name sel: " + subcat_name);
+        //Log.d("CATDATAFACTORY: ", "cat name sel: " + subcat_name);
         return new Subcategory(subcat_name, makeSubCategoryList(child_index));
     }
 

@@ -3,8 +3,11 @@ package com.gdapkus.googleexprecview;
 import static com.gdapkus.googleexprecview.DataFactory.makeGenres;
 import static com.gdapkus.googleexprecview.category.catclasses.CategoryDataFactory.createCategoryList;
 import static com.gdapkus.googleexprecview.category.catclasses.CategoryDataFactory.createSubcategoryList;
-import static com.gdapkus.googleexprecview.category.catclasses.JSONData.getJSONCategories;
+import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.getAllElements;
+import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.getLastID;
+import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.getSelSubcatSize;
 import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.getSelectedSubcategories;
+import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.removeSubcategoriesHM;
 import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.setSubCategoriesHM;
 
 
@@ -44,8 +47,13 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +61,9 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class BaseFragment extends Fragment {
+
+    //TODO: When the reorganization of categories happens the UI is slighlty misplaced.
+    //TODO: Test all functionality
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -134,15 +145,86 @@ public class BaseFragment extends Fragment {
         if(checked) {
             MultiCheckSubcategoryAdapter multi_subcategory_adapter = new MultiCheckSubcategoryAdapter(subcategories);
             setNewLayoutSize();
-            createDynamicUI(multi_subcategory_adapter, cat_title, childIndex);
+            addNode(multi_subcategory_adapter, cat_title, childIndex);
 
         }else{
             // List of all selected subcategories
-            HashMap<String, Integer> sel_sub_list = getSelectedSubcategories();
+            LinkedHashMap<String, Integer> sel_sub_list = getSelectedSubcategories();
             View v = view.findViewById(sel_sub_list.get(cat_title));
             ViewGroup parent = (ViewGroup) v.getParent();
             parent.removeView(v);
+            removeNode(cat_title, childIndex);
+            //getAllElements();
         }
+    }
+
+    private void addNode(MultiCheckSubcategoryAdapter adapter, String title, int index){
+        new Thread(){
+            @Override
+            public void run() {
+                setSubcatDynamicUI(adapter, title, index);
+                getAllElements();
+            }
+        }.start();
+    }
+
+    private void removeNode(String title, int index){
+        new Thread(){
+            @Override
+            public void run() {
+                //reatachNodeUIView(title, index);
+                linkToParent(title, index);
+                removeSubcategoriesHM(title);
+            }
+        }.start();
+    }
+
+    private void linkToParent(String title, int index){
+        List<Map.Entry<String, Integer>> list_id = new ArrayList<>(getSelectedSubcategories().entrySet());
+        int lhm_size = list_id.size();
+        for(int i = 0; i < list_id.size(); i++){
+            if((list_id.get(i).getKey().equals(title)) && (lhm_size-1 == i)){                   //last element
+                continue;
+            }
+            else if((list_id.get(i).getKey().equals(title)) && (i == 0)){                       // First element
+                changeFirstElmRules(list_id, i);
+            }
+            else if((list_id.get(i).getKey().equals(title)) && (i > 0) && (i < lhm_size-1)){    // Mid Element
+                changeMidElmRules(list_id, i);
+            }
+
+        }
+    }
+
+    private HashMap<String, Integer> currentObj(String title){
+        HashMap<String, Integer> cur = new HashMap<>();
+        cur.put(title, getSelectedSubcategories().get(title));
+        return cur;
+    }
+
+    // Change the leading dynamic UI to the next in line
+    private void changeFirstElmRules(List<Map.Entry<String, Integer>> list_id, int index){
+        View sec_elm = view.findViewById(list_id.get(index+1).getValue());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.removeRule(RelativeLayout.BELOW);
+        params.addRule(RelativeLayout.BELOW, rl_cat.getId());
+        sec_elm.setLayoutParams(params);
+    }
+
+    // Change the next node dynamic UI BELOW rule to be bellow previous node of the node that's being deleted
+    private void changeMidElmRules(List<Map.Entry<String, Integer>> list_id, int index){
+        View next_node_view = view.findViewById(list_id.get(index+1).getValue());
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.removeRule(RelativeLayout.BELOW);
+        params.addRule(RelativeLayout.BELOW, list_id.get(index-1).getValue());
+        next_node_view.setLayoutParams(params);
     }
 
    private void setNewLayoutSize(){
@@ -163,66 +245,71 @@ public class BaseFragment extends Fragment {
         return new Pair(width, height);
     }
 
-    private void createDynamicUI(MultiCheckSubcategoryAdapter adapter, String title, int index_val){
+    private int getCurrentRelLayoutUiId(int index){
+        return getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index+1),
+                "id",
+                getContext().getPackageName());
+    }
 
-        // Creation of subcategory layout after the category has been selected
-        // Create relative layout to be bellow category section
-        RelativeLayout rv = new RelativeLayout(getContext());
-        ViewGroup.LayoutParams params = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        );
-        ((RelativeLayout.LayoutParams) params).addRule(RelativeLayout.BELOW, rl_cat.getId());
+    private int getCurrentRecViewUiId(int index){
+        return getResources().getIdentifier("id_recycler_view_" + String.valueOf(index+1),
+                "id",
+                getContext().getPackageName());
+    }
 
-        int id_rl = getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index_val+1),
-                                                "id",
-                                                        getContext().getPackageName());
-        int id_rv = getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index_val+1),
-                                                "id",
-                                                        getContext().getPackageName());
-
-        rv.setId(id_rl);
-        rv.setLayoutParams(params);
-
-        // Create Scroll view for one or multiple subcategories
-        ScrollView sv = new ScrollView(getContext());
-        ViewGroup.LayoutParams sv_params = new RelativeLayout.LayoutParams(
+    private void setSubcatDynamicUI(MultiCheckSubcategoryAdapter adapter, String title, int index){
+        RelativeLayout dynamic_rl = new RelativeLayout(getContext());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        sv.setLayoutParams(sv_params);
 
-        // Create Relative Layout to hold the recycler view
+        int id_rl = getCurrentRelLayoutUiId(index);
+        int id_rv = getCurrentRecViewUiId(index);
+
+        if(getSelSubcatSize() == 0){
+            params.addRule(RelativeLayout.BELOW, rl_cat.getId());
+
+        }else{
+            params.addRule(RelativeLayout.BELOW, getLastID());
+        }
+        params.setMargins(8,8,8,8);
+        dynamic_rl.setId(id_rl);
+        setSubCategoriesHM(title, id_rl);
+        dynamic_rl.setLayoutParams(params);
+
+        ScrollView dynamic_sv = new ScrollView(getContext());
+        RelativeLayout.LayoutParams sv_params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        dynamic_sv.setLayoutParams(sv_params);
+
         RelativeLayout rv_item_holder = new RelativeLayout(getContext());
-        ViewGroup.LayoutParams rv_item_params = new RelativeLayout.LayoutParams(
+        RelativeLayout.LayoutParams rv_item_params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         rv_item_holder.setLayoutParams(rv_item_params);
 
-        // Create recycler view to hold subcategory list and set the adapter
         RecyclerView item_exp_list = new RecyclerView(getContext());
         item_exp_list.setId(id_rv);
-        //Create the recycler view Layout manager
         linearLayoutManager2 = new LinearLayoutManager(getContext());
-        //LinearLayoutManager llm = new LinearLayoutManager(getContext());
         item_exp_list.setLayoutManager(linearLayoutManager2);
         item_exp_list.setAdapter(adapter);
 
-        // add each element to the parent view
         rv_item_holder.addView(item_exp_list);
-        sv.addView(rv_item_holder);
-        rv.addView(sv);
-        rl.addView(rv);
-        setSubCategoriesHM(title, id_rl);
-        getLastElement();
+        dynamic_sv.addView(rv_item_holder);
+        dynamic_rl.addView(dynamic_sv);
+        rl.addView(dynamic_rl);
     }
 
-    private void getLastElement(){
-        HashMap<String, Integer> temp_map = new HashMap<String, Integer>();
-        temp_map = getSelectedSubcategories();
-        for(String key : temp_map.keySet()){
-            Log.d("DEBUG:", "keys " + key + "\n" + temp_map.get(key));
+
+    private void setLastAddedRVRule(ViewGroup.LayoutParams params, RelativeLayout rv){
+        //Log.d("RVRule: ", "id " + getLastID());
+        if(getSelSubcatSize() > 1) {
+            ((RelativeLayout.LayoutParams) params).addRule(RelativeLayout.BELOW, getLastID());
+            rv.setLayoutParams(params);
         }
     }
 
@@ -230,6 +317,11 @@ public class BaseFragment extends Fragment {
     * add the created dynamic UIs to hashmap
     * function to to see the last added element
     * by the last element oh hashmap take the id of rel lay and add params rule
+    * */
+
+
+    /*
+    * if removed item in the middle reatach it to previous node to next node
     * */
 }
 
