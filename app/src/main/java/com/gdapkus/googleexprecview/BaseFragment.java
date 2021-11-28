@@ -1,6 +1,5 @@
 package com.gdapkus.googleexprecview;
 
-import static com.gdapkus.googleexprecview.DataFactory.makeGenres;
 import static com.gdapkus.googleexprecview.category.catclasses.CategoryDataFactory.createCategoryList;
 import static com.gdapkus.googleexprecview.category.catclasses.CategoryDataFactory.createSubcategoryList;
 import static com.gdapkus.googleexprecview.category.catclasses.RegistrationUtils.getAllElements;
@@ -27,33 +26,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
-import com.gdapkus.googleexprecview.adapters.GenreAdapter;
-import com.gdapkus.googleexprecview.adapters.MultiCheckGenreAdapter;
 import com.gdapkus.googleexprecview.category.Category;
 import com.gdapkus.googleexprecview.category.Subcategory;
-import com.gdapkus.googleexprecview.category.SubcategoryList;
 import com.gdapkus.googleexprecview.category.adapters.MultiCheckCategoryAdapter;
 import com.gdapkus.googleexprecview.category.adapters.MultiCheckSubcategoryAdapter;
-import com.gdapkus.googleexprecview.category.catclasses.CategoryList;
 import com.thoughtbot.expandablecheckrecyclerview.listeners.OnCheckChildClickListener;
 import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup;
 
-import android.util.DisplayMetrics;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +53,7 @@ public class BaseFragment extends Fragment {
 
     //TODO: When the reorganization of categories happens the UI is slighlty misplaced.
     //TODO: Test all functionality
+    //TODO: dynamically
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -109,10 +99,8 @@ public class BaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_base, container, false);
-        List<Genre> genres = makeGenres();
         initViews(view);
 
-        GenreAdapter adapter = new GenreAdapter(genres);
         multi_adapter = new MultiCheckCategoryAdapter(categories);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(multi_adapter);
@@ -154,7 +142,6 @@ public class BaseFragment extends Fragment {
             ViewGroup parent = (ViewGroup) v.getParent();
             parent.removeView(v);
             removeNode(cat_title, childIndex);
-            //getAllElements();
         }
     }
 
@@ -172,7 +159,6 @@ public class BaseFragment extends Fragment {
         new Thread(){
             @Override
             public void run() {
-                //reatachNodeUIView(title, index);
                 linkToParent(title, index);
                 removeSubcategoriesHM(title);
             }
@@ -303,26 +289,6 @@ public class BaseFragment extends Fragment {
         dynamic_rl.addView(dynamic_sv);
         rl.addView(dynamic_rl);
     }
-
-
-    private void setLastAddedRVRule(ViewGroup.LayoutParams params, RelativeLayout rv){
-        //Log.d("RVRule: ", "id " + getLastID());
-        if(getSelSubcatSize() > 1) {
-            ((RelativeLayout.LayoutParams) params).addRule(RelativeLayout.BELOW, getLastID());
-            rv.setLayoutParams(params);
-        }
-    }
-
-    /*
-    * add the created dynamic UIs to hashmap
-    * function to to see the last added element
-    * by the last element oh hashmap take the id of rel lay and add params rule
-    * */
-
-
-    /*
-    * if removed item in the middle reatach it to previous node to next node
-    * */
 }
 
 
