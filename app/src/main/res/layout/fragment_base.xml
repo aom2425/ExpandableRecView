@@ -5,39 +5,85 @@
     android:layout_height="match_parent"
     tools:context=".BaseFragment">
 
-    <ScrollView
-        android:id="@+id/scroll_view_cat_main"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="2">
+
     <RelativeLayout
-        android:id="@+id/expand_category_ov"
+        android:id="@+id/category_rl_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
 
-
-        <RelativeLayout
-            android:id="@+id/expand_category_rl"
+        <ScrollView
+            android:id="@+id/scroll_view_cat_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ScrollView
+            <RelativeLayout
+                android:id="@+id/expand_category_ov"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
+
+
                 <RelativeLayout
+                    android:id="@+id/expand_category_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                        </RelativeLayout>
+                    </ScrollView>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+
+
+                <!--<Button
+                    android:id="@+id/btn_register_next_step"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:minHeight="0dp"
+                    android:background="@drawable/transparent_bg_bordered_button"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/registration_next_step_button_string"
+                    android:textColorHighlight="@color/black"
+                    android:textColor="@android:color/white" />-->
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_register_next_step"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/registration_next_step_button_string"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/transparent_bg_bordered_button"
+        android:textColor="@color/black"
+        />
 
-                </RelativeLayout>
-            </ScrollView>
-        </RelativeLayout>
-    </RelativeLayout>
-    </ScrollView>
+    </LinearLayout>
 
 </FrameLayout>

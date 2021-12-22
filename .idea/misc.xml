@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/drawable-v24/transparent_bg_bordered.xml" value="0.42083333333333334" />
+        <entry key="..\:/GoogleExpRecView/app/src/main/res/drawable-v24/transparent_bg_bordered_button.xml" value="0.42083333333333334" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/drawable/ic_arrow_down.xml" value="0.5635416666666667" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/activity_main.xml" value="0.5473958333333333" />
         <entry key="..\:/GoogleExpRecView/app/src/main/res/layout/fragment_base.xml" value="0.33" />

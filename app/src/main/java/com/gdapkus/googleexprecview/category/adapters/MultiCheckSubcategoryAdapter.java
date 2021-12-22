@@ -49,4 +49,5 @@ public class MultiCheckSubcategoryAdapter extends CheckableChildRecyclerViewAdap
     public void onBindGroupViewHolder(SubCategoryTitleViewHolder holder, int flatPosition, ExpandableGroup group) {
         holder.setSubcategoryTitle(group);
     }
+
 }

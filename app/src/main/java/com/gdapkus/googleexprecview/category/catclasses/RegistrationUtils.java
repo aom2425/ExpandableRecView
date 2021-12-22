@@ -37,29 +37,6 @@ public class RegistrationUtils {
         //reatachNodeUIView(key);
     }
 
-    /*public static void reatachNodeUIView(String key, int index){
-        Iterator itr = selected_subcategories_id.entrySet().iterator();
-        List<Map.Entry<String, Integer>> list_id = new ArrayList<>(selected_subcategories_id.entrySet());
-        int count = 0;
-        Log.d("LHM", "list size: " + list_id.size() + " index " + index);
-        int lhm_size = list_id.size();
-        Log.d("LHM", "if statement " + ((lhm_size < 3) && (index == 0)));
-
-
-
-        for(int i = 1; i < lhm_size-1; i++){
-
-
-            if(lhm_size >= 3 && i == index){
-                Log.d("LHM", "list item previous: " + list_id.get(i-1));
-                Log.d("LHM", "list item: current" + list_id.get(i));
-                Log.d("LHM", "list item: next" + list_id.get(i+1));
-            }
-            //check for last
-
-        }
-    }*/
-
     public static void getAllElements(){
         for(String key : selected_subcategories_id.keySet()){
             Log.d("All subs", key);

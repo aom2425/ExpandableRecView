@@ -34,6 +34,7 @@ import com.gdapkus.googleexprecview.category.adapters.MultiCheckSubcategoryAdapt
 import com.thoughtbot.expandablecheckrecyclerview.listeners.OnCheckChildClickListener;
 import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup;
 
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,8 +71,9 @@ public class BaseFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private LinearLayoutManager linearLayoutManager2;
     MultiCheckCategoryAdapter multi_adapter;
-    private List<Category> categories = createCategoryList();
+    private final List<Category> categories = createCategoryList();
     private View view;
+    private Button next_btn;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -106,7 +109,7 @@ public class BaseFragment extends Fragment {
         recyclerView.setAdapter(multi_adapter);
 
         multi_adapter.setChildClickListener(adapter_lister);
-
+        next_btn.setOnClickListener(next_btn_litener);
         return view;
     }
 
@@ -116,7 +119,7 @@ public class BaseFragment extends Fragment {
         scrollView =  (ScrollView) view.findViewById(R.id.scroll_view_cat_main);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
-
+        next_btn = view.findViewById(R.id.btn_register_next_step);
     }
 
     OnCheckChildClickListener adapter_lister = new OnCheckChildClickListener() {
@@ -126,24 +129,43 @@ public class BaseFragment extends Fragment {
         }
     };
 
+    View.OnClickListener next_btn_litener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //TODO: MAYBE LEAVE THIS BUT PROBS WON"T
+        }
+    };
+
+
     private void createSubcategoryRecView(boolean checked, int childIndex){
 
         List<Subcategory> subcategories = createSubcategoryList(childIndex);
+        Log.d("SIZE of list", "= " + subcategories.get(0).getSubcategoryList().size());
+
         String cat_title = subcategories.get(0).getTitle();
 
         if(checked) {
             MultiCheckSubcategoryAdapter multi_subcategory_adapter = new MultiCheckSubcategoryAdapter(subcategories);
             //setNewLayoutSize();
+            Log.d("BEFORE:", subcategories.get(0).getSubcategoryList().toString());
             addNode(multi_subcategory_adapter, cat_title, childIndex);
+            subcatSelections(multi_subcategory_adapter, subcategories);
 
         }else{
             // List of all selected subcategories
             LinkedHashMap<String, Integer> sel_sub_list = getSelectedSubcategories();
-            View v = view.findViewById(sel_sub_list.get(cat_title));
+            int rem_node_id = checkRemoveId(sel_sub_list.get(cat_title));//sel_sub_list.get(cat_title);
+            View v = view.findViewById(rem_node_id);
             ViewGroup parent = (ViewGroup) v.getParent();
             parent.removeView(v);
             removeNode(cat_title, childIndex);
         }
+    }
+
+
+
+    private int checkRemoveId(Integer id){
+        return (id != null ? id.intValue() : 0);
     }
 
     private void addNode(MultiCheckSubcategoryAdapter adapter, String title, int index){
@@ -216,7 +238,7 @@ public class BaseFragment extends Fragment {
 
    private void setNewLayoutSize(){
        ViewGroup.LayoutParams pa = recyclerView.getLayoutParams();
-       pa.height = getScreenResolution(getActivity()).second / 2;
+       pa.height = getScreenResolution(requireActivity()).second / 2;
        recyclerView.setLayoutManager(linearLayoutManager);
    }
 
@@ -233,15 +255,15 @@ public class BaseFragment extends Fragment {
     }
 
     private int getCurrentRelLayoutUiId(int index){
-        return getResources().getIdentifier("id_sub_relative_layout_" + String.valueOf(index+1),
+        return getResources().getIdentifier("id_sub_relative_layout_" + (index + 1),
                 "id",
-                getContext().getPackageName());
+                requireContext().getPackageName());
     }
 
     private int getCurrentRecViewUiId(int index){
-        return getResources().getIdentifier("id_recycler_view_" + String.valueOf(index+1),
+        return getResources().getIdentifier("id_recycler_view_" + (index + 1),
                 "id",
-                getContext().getPackageName());
+                requireContext().getPackageName());
     }
 
     private void setSubcatDynamicUI(MultiCheckSubcategoryAdapter adapter, String title, int index){
@@ -254,9 +276,10 @@ public class BaseFragment extends Fragment {
         int id_rl = getCurrentRelLayoutUiId(index);
         int id_rv = getCurrentRecViewUiId(index);
 
+        //params.addRule(RelativeLayout.ABOVE, R.id.next_btn_id);
+
         if(getSelSubcatSize() == 0){
             params.addRule(RelativeLayout.BELOW, rl_cat.getId());
-
         }else{
             params.addRule(RelativeLayout.BELOW, getLastID());
         }
@@ -279,7 +302,7 @@ public class BaseFragment extends Fragment {
         );
         rv_item_holder.setLayoutParams(rv_item_params);
 
-        RecyclerView item_exp_list = new RecyclerView(getContext());
+        RecyclerView item_exp_list = new RecyclerView(requireContext());
         item_exp_list.setId(id_rv);
         linearLayoutManager2 = new LinearLayoutManager(getContext());
         item_exp_list.setLayoutManager(linearLayoutManager2);
@@ -289,7 +312,27 @@ public class BaseFragment extends Fragment {
         dynamic_sv.addView(rv_item_holder);
         dynamic_rl.addView(dynamic_sv);
         rl.addView(dynamic_rl);
+
+
     }
+
+    private void subcatSelections(MultiCheckSubcategoryAdapter adapter, List<Subcategory> subcategories) {
+        adapter.setChildClickListener(new OnCheckChildClickListener() {
+            @Override
+            public void onCheckChildCLick(View v, boolean checked, CheckedExpandableGroup group, int childIndex) {
+                if (checked) {
+                    String subcat_name = subcategories.get(0).getSubcategoryList().get(childIndex).getName();
+                    String subcat_value = subcategories.get(0).getSubcategoryList().get(childIndex).getSubcategoryValue();
+                    Log.d("SUBCAT:", subcat_name + " subcat index clicked on " + childIndex + " with val of " + subcat_value);
+                }
+                else{
+                    Log.d("REM: ", "removing from transfer");
+                }
+            }
+        });
+    }
+
+
 }
 
 
